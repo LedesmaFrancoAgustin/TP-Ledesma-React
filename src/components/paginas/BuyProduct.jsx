@@ -1,29 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import { doc, getDoc, getFirestore } from 'firebase/firestore';
-import { updatecartItems } from '../Navbar';
-import { clearCartCount } from "../Navbar";
-import { useNavigate } from 'react-router-dom'; // Importa useNavigate
+import { useNavigate } from 'react-router-dom'; 
 import imgclearBuy from "../img/clear.png";
+import { useCart } from '../paginas/cartContext';
 
 function BuyProduct() {
+  const { cartItems,removeFromCart,removeAllItemsById,addToCart ,clearCart} = useCart();
+  const navigate = useNavigate();
+
   const [products, setProducts] = useState([]);
   const [totalAmount, setTotalAmount] = useState(0);
-  const [cartItemIds, setCartItemIds] = useState(updatecartItems());
-  const navigate = useNavigate(); // Crea una instancia de useNavigate
 
-  console.log("BuyProduct : ", cartItemIds);
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
         const db = getFirestore();
-        
-        // Contar la cantidad de cada producto
-        const itemCountMap = cartItemIds.reduce((acc, itemId) => {
+        const itemCountMap = cartItems.reduce((acc, itemId) => {
           acc[itemId] = (acc[itemId] || 0) + 1;
           return acc;
         }, {});
-        
         const uniqueItemIds = Object.keys(itemCountMap);
 
         const productsPromises = uniqueItemIds.map(async (itemId) => {
@@ -36,16 +32,14 @@ function BuyProduct() {
             return null;
           }
         });
-        
+
         const productsData = await Promise.all(productsPromises);
-        const validProducts = productsData.filter(product => product !== null); // Filtra productos que no existen
+        const validProducts = productsData.filter(product => product !== null);
         setProducts(validProducts);
 
-        // Calcular el monto total considerando la cantidad de cada producto
         const total = validProducts.reduce((sum, product) => sum + product.price * product.quantity, 0);
         setTotalAmount(total);
 
-        // Si el carrito está vacío, redirige a la página de productos
         if (validProducts.length === 0) {
           navigate('/itemsProductos');
         }
@@ -55,37 +49,25 @@ function BuyProduct() {
     };
 
     fetchProducts();
-  }, [cartItemIds, navigate]);
+  }, [cartItems, navigate]);
 
   const handleRemoveProduct = (productId) => {
-    const itemCountMap = cartItemIds.reduce((acc, itemId) => {
-      acc[itemId] = (acc[itemId] || 0) + 1;
-      return acc;
-    }, {});
-    
-    const updatedCartItems = cartItemIds.filter(itemId => itemId !== productId);
-    setCartItemIds(updatedCartItems);
-
-    // Enviar la cantidad de productos que se eliminan a clearCartCount
-    clearCartCount(itemCountMap[productId], productId);
+    const updatedCartItems = cartItems.filter(item => item !== productId);
+    // Update the cart state using the context function
+    // Assuming you have a removeFromCart function provided by the context
+    removeAllItemsById(productId);
+    // Optionally, you can also update the state locally to re-render the component
+    setProducts(products.filter(product => product.id !== productId));
+    setTotalAmount(totalAmount - products.find(product => product.id === productId).price);
   };
 
   const handleReduceQuantity = (productId) => {
-    const updatedCartItems = [...cartItemIds];
-    const productIndex = updatedCartItems.indexOf(productId);
-
-    if (productIndex !== -1) {
-      updatedCartItems.splice(productIndex, 1);
-      setCartItemIds(updatedCartItems);
-      clearCartCount(1, productId); // Restar una unidad del contador del carrito
-    }
+    removeFromCart(productId)
   };
+  
 
   const handleIncreaseQuantity = (productId) => {
-    const updatedCartItems = [...cartItemIds];
-    updatedCartItems.push(productId);
-    setCartItemIds(updatedCartItems);
-    clearCartCount(-1, productId); // Sumar una unidad al contador del carrito
+    addToCart(productId);
   };
 
   return (

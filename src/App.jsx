@@ -11,12 +11,17 @@ import BuyProduct from './components/paginas/BuyProduct';
 
 import PageNotFound from "./components/paginas/PageNotFound"
 
+import { CartContextProvider } from './components/paginas/cartContext';
+
 function App() {
   const [count, setCount] = useState(0)
 
   return (
     <>
       <BrowserRouter>
+      <CartContextProvider>
+
+      
       <Navbar/>
         <Routes>
 
@@ -29,7 +34,9 @@ function App() {
   
 
       </Routes>
+      </CartContextProvider>
       </BrowserRouter>
+      
         
     </>
   )

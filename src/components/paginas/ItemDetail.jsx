@@ -2,26 +2,24 @@ import React from 'react';
 //import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 
-import { updateCartCount } from '../Navbar';
+import { useCart } from '../paginas/cartContext';
+
+
 import  imgBuy from "../img/buy.png";
 
-const ItemDetail = ({ product   }) => {
 
-    const navigate = useNavigate();
 
-    const handleAddToCart = (id) => {
-        console.log("Entró handleAddToCart", id);
-        // Llama a la función updateCartCount para actualizar el contador del carrito
-        updateCartCount(id); // Puedes pasar cualquier valor según sea necesario
+const ItemDetail = ({ product }) => {
+  const { addToCart } = useCart();
+  const navigate = useNavigate();
 
-       
-      };
+  const handleAddToCart = (id) => {
+    addToCart(id);
+  };
 
-      const clickNavigatePag = (id) => {
-
-        handleAddToCart(id)
-
-        navigate('/BuyProduct');
+  const clickNavigatePag = (id) => {
+    handleAddToCart(id)
+    navigate('/BuyProduct');
        
       };
   return (
