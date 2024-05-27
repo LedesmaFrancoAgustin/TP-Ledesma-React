@@ -8,7 +8,7 @@ import "../components/estilo.css"
 import {Link} from "react-router-dom"
 
 import  logo from "../assets/logo.png";
-//import { BsCart2 } from "react-icons/bs";
+import { BsCart2 } from "react-icons/bs";
 
 export let updateCartCount = () => {};
 export let updatecartItems = () => {};
@@ -130,7 +130,7 @@ const Navbar = () => {
                 </ul>
                 <div className="carrito iconoTransicion" >
                   <Link to={`/BuyProduct`}>
-                   
+                    <BsCart2 size="30px"/>
                      
                     <span className='badge'>{cartCount}</span>
                   </Link>
