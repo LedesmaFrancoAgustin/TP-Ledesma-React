@@ -1,5 +1,5 @@
 import React from 'react';
-//import { Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 
 import { useCart } from '../paginas/cartContext';
@@ -22,6 +22,11 @@ const ItemDetail = ({ product }) => {
     navigate('/BuyProduct');
        
       };
+   const clickNavigatePagDetail = (id) => {
+        navigate('/detail/' + id);  
+        
+          };
+
   return (
     <>
       <div className="card w-100" style={{ height: '520px' }}> {/* Establecer un ancho fijo para todas las tarjetas */}
@@ -47,6 +52,12 @@ const ItemDetail = ({ product }) => {
               <p className="rating-number p-1">{product.description}</p>
             </div>
           </div>
+          <div className="d-flex justify-content-center ">
+              
+              <Link to={"/product/"+product.id} className="nav-link text-black"> Mas detalle</Link>
+        
+          </div>
+
         </div>
       </div>
 
