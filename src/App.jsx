@@ -11,6 +11,7 @@ import BuyProduct from './components/paginas/BuyProduct';
 
 import Product from './components/paginas/detail';
 
+
 import PageNotFound from "./components/paginas/PageNotFound"
 
 import { CartContextProvider } from './components/paginas/cartContext';
@@ -33,6 +34,7 @@ function App() {
           <Route path="/detail/:idProduct" element={<ItemDetailContainer/>}/>
           <Route path="/BuyProduct" element={<BuyProduct />} />
           <Route path="/product/:id" element={<Product/>} />
+    
           <Route path="*" element={<PageNotFound/>} />
   
 
